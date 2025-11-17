@@ -5,8 +5,10 @@ import { Agent } from "./agent";
 import { Catalog } from "./catalog";
 import { Event } from "./event";
 import { Health } from "./health";
+import { Intention } from "./intention";
 import { Kv } from "./kv";
 import { Query } from "./query";
+import { Resolver, ConsulResolverConfig, SelectionAlgorithm } from "./resolver";
 import { Session } from "./session";
 import { Status } from "./status";
 import { Transaction } from "./transaction";
@@ -44,6 +46,7 @@ declare class Consul {
   catalog: Catalog;
   event: Event;
   health: Health;
+  intention: Intention;
   kv: Kv;
   query: Query;
   session: Session;
@@ -55,8 +58,10 @@ declare class Consul {
   static Catalog: typeof Catalog;
   static Event: typeof Event;
   static Health: typeof Health;
+  static Intention: typeof Intention;
   static Kv: typeof Kv;
   static Query: typeof Query;
+  static Resolver: typeof Resolver;
   static Session: typeof Session;
   static Status: typeof Status;
   static Transaction: typeof Transaction;
@@ -65,6 +70,10 @@ declare class Consul {
   destroy(): void;
 
   watch(options: WatchOptions): Watch;
+
+  resolver(config: ConsulResolverConfig): Resolver;
 }
+
+export { SelectionAlgorithm };
 
 export { Consul };
