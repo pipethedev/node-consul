@@ -26,6 +26,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
   - [Service](#catalog-service)
 * [Event](#event)
 * [Health](#health)
+* [Intention](#intention)
 * [KV](#kv)
 * [Query](#query)
 * [Session](#session)
@@ -1319,6 +1320,170 @@ Result
     "ServiceName": "example"
   }
 ]
+```
+
+<a id="intention"></a>
+
+### consul.intention
+
+- [list](#intention-list)
+- [create](#intention-create)
+- [get](#intention-get)
+- [update](#intention-update)
+- [destroy](#intention-destroy)
+
+<a id="intention-list"></a>
+
+### consul.intention.list([options])
+
+List all Connect intentions.
+
+Options
+
+- dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+```javascript
+await consul.intention.list();
+```
+
+Result
+
+```json
+[
+  {
+    "ID": "a0f5dc05-84c3-5f5a-1d88-05b875e524e1",
+    "SourceName": "web",
+    "DestinationName": "db",
+    "SourceType": "",
+    "Action": "allow",
+    "Description": "",
+    "Meta": null,
+    "Precedence": 9,
+    "CreateIndex": 11,
+    "ModifyIndex": 12
+  }
+]
+```
+
+<a id="intention-create"></a>
+
+### consul.intention.create(options)
+
+Create a new Connect intention.
+
+Options
+
+- sourcename (String, required): source service name
+- destinationname (String, required): destination service name
+- action (String, enum: allow, deny; required): action to take
+- description (String, optional): human readable description
+- sourcetype (String, optional): source type (e.g., "consul")
+- meta (Object, optional): metadata key/value pairs
+- precedence (Number, optional): precedence for the intention
+- permissions (Array, optional): L7 permissions for application-aware intentions
+- dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+```javascript
+await consul.intention.create({
+  sourcename: "web",
+  destinationname: "db",
+  action: "allow",
+  description: "Allow web service to access database",
+});
+```
+
+Result
+
+```json
+{
+  "ID": "a0f5dc05-84c3-5f5a-1d88-05b875e524e1"
+}
+```
+
+<a id="intention-get"></a>
+
+### consul.intention.get(options)
+
+Get a specific Connect intention.
+
+Options
+
+- id (String, required): intention ID
+- dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+```javascript
+await consul.intention.get("a0f5dc05-84c3-5f5a-1d88-05b875e524e1");
+```
+
+Result
+
+```json
+{
+  "ID": "a0f5dc05-84c3-5f5a-1d88-05b875e524e1",
+  "SourceName": "web",
+  "DestinationName": "db",
+  "SourceType": "",
+  "Action": "allow",
+  "Description": "Allow web service to access database",
+  "Meta": null,
+  "Precedence": 9,
+  "CreateIndex": 11,
+  "ModifyIndex": 12
+}
+```
+
+<a id="intention-update"></a>
+
+### consul.intention.update(options)
+
+Update an existing Connect intention.
+
+Options
+
+- id (String, required): intention ID
+- sourcename (String, required): source service name
+- destinationname (String, required): destination service name
+- action (String, enum: allow, deny; required): action to take
+- description (String, optional): human readable description
+- sourcetype (String, optional): source type (e.g., "consul")
+- meta (Object, optional): metadata key/value pairs
+- precedence (Number, optional): precedence for the intention
+- permissions (Array, optional): L7 permissions for application-aware intentions
+- dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+```javascript
+await consul.intention.update({
+  id: "a0f5dc05-84c3-5f5a-1d88-05b875e524e1",
+  sourcename: "web",
+  destinationname: "db",
+  action: "deny",
+  description: "Block web service from accessing database",
+});
+```
+
+<a id="intention-destroy"></a>
+
+### consul.intention.destroy(options)
+
+Delete a Connect intention.
+
+Options
+
+- id (String, required): intention ID
+- dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+```javascript
+await consul.intention.destroy("a0f5dc05-84c3-5f5a-1d88-05b875e524e1");
 ```
 
 <a id="kv"></a>
