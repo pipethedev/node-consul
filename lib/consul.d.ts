@@ -8,7 +8,14 @@ import { Health } from "./health";
 import { Intention } from "./intention";
 import { Kv } from "./kv";
 import { Query } from "./query";
-import { Resolver, ConsulResolverConfig, SelectionAlgorithm } from "./resolver";
+import {
+  Resolver,
+  ConsulResolverConfig,
+  SelectionAlgorithm,
+  ServiceInfo,
+  OptimalServiceResult,
+  ServiceMetrics,
+} from "./resolver";
 import { Session } from "./session";
 import { Status } from "./status";
 import { Transaction } from "./transaction";
@@ -74,6 +81,13 @@ declare class Consul {
   resolver(config: ConsulResolverConfig): Resolver;
 }
 
-export { SelectionAlgorithm };
+export {
+  SelectionAlgorithm,
+  ConsulResolverConfig,
+  ServiceInfo,
+  OptimalServiceResult,
+  ServiceMetrics,
+  Resolver,
+};
 
 export { Consul };
