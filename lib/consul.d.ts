@@ -8,6 +8,7 @@ import { Health } from "./health";
 import { Intention } from "./intention";
 import { Kv } from "./kv";
 import { Query } from "./query";
+import { Resolver, ConsulResolverConfig, SelectionAlgorithm } from "./resolver";
 import { Session } from "./session";
 import { Status } from "./status";
 import { Transaction } from "./transaction";
@@ -60,6 +61,7 @@ declare class Consul {
   static Intention: typeof Intention;
   static Kv: typeof Kv;
   static Query: typeof Query;
+  static Resolver: typeof Resolver;
   static Session: typeof Session;
   static Status: typeof Status;
   static Transaction: typeof Transaction;
@@ -68,6 +70,10 @@ declare class Consul {
   destroy(): void;
 
   watch(options: WatchOptions): Watch;
+
+  resolver(config: ConsulResolverConfig): Resolver;
 }
+
+export { SelectionAlgorithm };
 
 export { Consul };

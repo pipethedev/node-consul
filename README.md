@@ -29,6 +29,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
 * [Intention](#intention)
 * [KV](#kv)
 * [Query](#query)
+* [Resolver](#resolver)
 * [Session](#session)
 * [Status](#status)
 * [Transaction](#transaction)
@@ -1484,6 +1485,186 @@ Usage
 
 ```javascript
 await consul.intention.destroy("a0f5dc05-84c3-5f5a-1d88-05b875e524e1");
+```
+
+<a id="resolver"></a>
+
+### consul.resolver(config)
+
+Create a DNS resolver instance for load balancing and service discovery with Consul.
+
+The resolver provides intelligent service selection using multiple algorithms, DNS resolution, health checks, and Redis-based metrics tracking.
+
+Options
+
+- redis (Redis, optional): ioredis instance for caching (required if cacheEnabled is true)
+- cacheEnabled (Boolean, default: false): enable Redis caching
+- cachePrefix (String, required): prefix for Redis cache keys
+- debug (Boolean, default: false): enable debug logging
+- weights (Object, optional): custom weights for weighted round robin algorithm
+  - health (Number, default: 0.25): weight for health score
+  - responseTime (Number, default: 0.2): weight for response time
+  - errorRate (Number, default: 0.2): weight for error rate
+  - resources (Number, default: 0.15): weight for CPU/memory usage
+  - connections (Number, default: 0.1): weight for active connections
+  - distribution (Number, default: 0.1): weight for distribution fairness
+- metrics (Object, optional): default metrics for new services
+  - responseTime (Number, default: 100): default response time in ms
+  - errorRate (Number, default: 0): default error rate percentage
+  - cpuUsage (Number, default: 50): default CPU usage percentage
+  - memoryUsage (Number, default: 50): default memory usage percentage
+  - activeConnections (Number, default: 0): default active connections
+- cacheTTL (Number, default: 60000): cache TTL in milliseconds
+- dnsEndpoints (String[], optional): custom DNS endpoints
+- dnsTimeout (Number, default: 1500): DNS query timeout in milliseconds
+- dnsRetries (Number, default: 2): number of DNS retry attempts
+
+Usage
+
+```javascript
+import Consul from "@brimble/consul";
+import Redis from "ioredis";
+
+const consul = new Consul({
+  host: "127.0.0.1",
+  port: 8500,
+});
+
+const redis = new Redis({
+  host: "localhost",
+  port: 6379,
+});
+
+const resolver = consul.resolver({
+  redis,
+  cacheEnabled: true,
+  cachePrefix: "myapp",
+  debug: false,
+});
+```
+
+<a id="resolver-select"></a>
+
+### resolver.selectOptimalService(service, algorithm)
+
+Select the optimal service instance based on the specified algorithm.
+
+Options
+
+- service (String, required): service name to resolve
+- algorithm (String, optional): selection algorithm
+  - `SelectionAlgorithm.RoundRobin` (default): round-robin selection
+  - `SelectionAlgorithm.LeastConnection`: select service with fewest connections
+  - `SelectionAlgorithm.WeightedRoundRobin`: weighted selection based on metrics
+
+Usage
+
+```javascript
+const Consul = require("@brimble/consul");
+const { SelectionAlgorithm } = Consul.Resolver;
+
+const result = await resolver.selectOptimalService(
+  "my-service",
+  SelectionAlgorithm.LeastConnection,
+);
+
+if (result.selected) {
+  console.log(`Selected: ${result.selected.ip}:${result.selected.port}`);
+}
+```
+
+Result
+
+```json
+{
+  "selected": {
+    "ip": "192.168.1.10",
+    "port": 8080
+  },
+  "services": [
+    {
+      "ip": "192.168.1.10",
+      "port": 8080
+    },
+    {
+      "ip": "192.168.1.11",
+      "port": 8080
+    }
+  ]
+}
+```
+
+<a id="resolver-increment"></a>
+
+### resolver.incrementConnections(serviceId)
+
+Increment the active connection count for a service.
+
+Options
+
+- serviceId (String, required): service ID
+
+Usage
+
+```javascript
+await resolver.incrementConnections("service-id-123");
+```
+
+<a id="resolver-decrement"></a>
+
+### resolver.decrementConnections(serviceId)
+
+Decrement the active connection count for a service.
+
+Options
+
+- serviceId (String, required): service ID
+
+Usage
+
+```javascript
+await resolver.decrementConnections("service-id-123");
+```
+
+<a id="resolver-metrics"></a>
+
+### resolver.getSelectionMetrics(serviceId)
+
+Get current metrics for a specific service.
+
+Options
+
+- serviceId (String, required): service ID
+
+Usage
+
+```javascript
+const metrics = await resolver.getSelectionMetrics("service-id-123");
+```
+
+Result
+
+```json
+{
+  "responseTime": 150,
+  "errorRate": 0.5,
+  "cpuUsage": 45,
+  "memoryUsage": 60,
+  "activeConnections": 10,
+  "lastSelectedTime": 1234567890
+}
+```
+
+<a id="resolver-refresh"></a>
+
+### resolver.refresh()
+
+Clear all stored metrics from Redis cache.
+
+Usage
+
+```javascript
+await resolver.refresh();
 ```
 
 <a id="kv"></a>
