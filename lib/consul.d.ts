@@ -5,6 +5,7 @@ import { Agent } from "./agent";
 import { Catalog } from "./catalog";
 import { Event } from "./event";
 import { Health } from "./health";
+import { Intention } from "./intention";
 import { Kv } from "./kv";
 import { Query } from "./query";
 import { Session } from "./session";
@@ -44,6 +45,7 @@ declare class Consul {
   catalog: Catalog;
   event: Event;
   health: Health;
+  intention: Intention;
   kv: Kv;
   query: Query;
   session: Session;
@@ -55,6 +57,7 @@ declare class Consul {
   static Catalog: typeof Catalog;
   static Event: typeof Event;
   static Health: typeof Health;
+  static Intention: typeof Intention;
   static Kv: typeof Kv;
   static Query: typeof Query;
   static Session: typeof Session;
