@@ -3,6 +3,7 @@ import { Agent as httpsAgent } from "https";
 import { Acl } from "./acl";
 import { Agent } from "./agent";
 import { Catalog } from "./catalog";
+import { Config } from "./config";
 import { Event } from "./event";
 import { Health } from "./health";
 import { Intention } from "./intention";
@@ -51,6 +52,7 @@ declare class Consul {
   acl: Acl;
   agent: Agent;
   catalog: Catalog;
+  config: Config;
   event: Event;
   health: Health;
   intention: Intention;
@@ -63,6 +65,7 @@ declare class Consul {
   static Acl: typeof Acl;
   static Agent: typeof Agent;
   static Catalog: typeof Catalog;
+  static Config: typeof Config;
   static Event: typeof Event;
   static Health: typeof Health;
   static Intention: typeof Intention;

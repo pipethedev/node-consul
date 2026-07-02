@@ -24,6 +24,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
   - [Connect](#catalog-connect)
   - [Node](#catalog-node)
   - [Service](#catalog-service)
+* [Config](#config)
 * [Event](#event)
 * [Health](#health)
 * [Intention](#intention)
@@ -1065,6 +1066,101 @@ Result
     "ServicePort": 80
   }
 ]
+```
+
+<a id="config"></a>
+
+### consul.config
+
+- [list](#config-list)
+- [get](#config-get)
+- [set](#config-set)
+- [destroy](#config-destroy)
+
+<a id="config-list"></a>
+
+### consul.config.list(options)
+
+Lists config entries for a given kind.
+
+Options
+
+- kind (String): config entry kind
+- dc (String, optional): datacenter
+
+Usage
+
+```javascript
+await consul.config.list("service-resolver");
+```
+
+<a id="config-get"></a>
+
+### consul.config.get(options)
+
+Gets a config entry.
+
+Options
+
+- kind (String): config entry kind
+- name (String): config entry name
+- dc (String, optional): datacenter
+
+Usage
+
+```javascript
+await consul.config.get({
+  kind: "service-resolver",
+  name: "salary-index-ng",
+});
+```
+
+<a id="config-set"></a>
+
+### consul.config.set(entry[, options])
+
+Creates or updates a config entry.
+
+Options
+
+- entry (Object): Consul config entry payload
+- token (String, optional): ACL token
+- dc (String, optional): datacenter
+
+Usage
+
+```javascript
+await consul.config.set(
+  {
+    Kind: "service-resolver",
+    Name: "salary-index-ng",
+    Redirect: {
+      Service: "6a3ea78d3d66fd3ab1dbbb12",
+    },
+  },
+  { token: process.env.CONSUL_HTTP_TOKEN },
+);
+```
+
+<a id="config-destroy"></a>
+
+### consul.config.destroy(options)
+
+Deletes a config entry. Alias: `consul.config.delete(options)`.
+
+Options
+
+- kind (String): config entry kind
+- name (String): config entry name
+- dc (String, optional): datacenter
+
+Usage
+
+```javascript
+await consul.config.destroy({
+  kind: "service-resolver",
+  name: "salary-index-ng",
+});
 ```
 
 <a id="event"></a>
